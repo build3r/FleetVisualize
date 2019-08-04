@@ -16,17 +16,111 @@ app.all('*', function (req, res, next) {
 });
 
 router.get('/trip', function (req, res, next) {
-  var sql = buildQuery(req.query)
+  console.log("Wuery "+JSON.stringify(req.query));
+  res.json({
+    "features": {
+      "2013-11-16 05:54:00": [
+      {
+          "type": "Feature",
+          "properties": {
+              "batchStart": "20131116000000",
+              "terminal": "JFKT5",
+              "duration": "975",
+              "pickupTime": "2013-11-16 05:54:00"
+          },
+          "geometry": {
+              "type": "LineString",
+              "coordinates": "_zzmAus`yM|@bCnCdHhA`DLFF@JAJE??b@{A|@kCp@aBzBiF`@iAj@qC`AeEZcAbCeGh@sALYx@mBT]JIPKREbAWzA}@p@k@b@m@~C_GVm@V_ATgBn@eDvA{ERm@b@iAbEuJnCyG`AaC\_AJ_@x@yChEcO??JL??gBfG"
+          }
+      }],
+      "2013-11-16 05:56:00": [
+        {
+            "type": "Feature",
+            "properties": {
+                "batchStart": "20131116000000",
+                "terminal": "JFKT5",
+                "duration": "567",
+                "pickupTime": "2013-11-16 05:56:00"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": "ujxmAm`cyMqAAgAA}DFiAMu@Ms@Oq@WKE??nCyG`AaC\_AJ_@x@yC??JD??{@vCK^Mb@"
+            }
+        }],
+      "2013-11-16 05:58:00": [
+        {
+            "type": "Feature",
+            "properties": {
+                "batchStart": "20131116000000",
+                "terminal": "JFKT5",
+                "duration": "638",
+                "pickupTime": "2013-11-16 05:58:00"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": "}|ymAmnfyMv@q@\Sr@i@PIf@Hr@N`Cr@^B~EDfABpBLrABzALpDp@`Bd@`@b@tAfA|ChBpAlAlAlALXX~@??tBCj@DzBVNB??_CrNa@zBmAxG_AxFk@nCo@~BmBtG??~Bp@vAJ~AFH?pA?tF@dAO??YwB|@Q??ScC"
+            }
+        }
+      ],
+
+      "2013-11-16 05:57:00": [
+        {
+            "type": "Feature",
+            "properties": {
+                "batchStart": "20131116000000",
+                "terminal": "JFKT5",
+                "duration": "973",
+                "pickupTime": "2013-11-16 05:57:00"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": "ajymA{lbyMlAP??vA{ERm@b@iAbEuJnCyG`AaC\_AJ_@x@yChEcO??JL~Bp@vAJ~AF???_@A}A|@@"
+            }
+        }],
+
+      "2013-11-16 05:55:00": [
+        {
+            "type": "Feature",
+            "properties": {
+                "batchStart": "20131116000000",
+                "terminal": "JFKT5",
+                "duration": "234",
+                "pickupTime": "2013-11-16 05:55:00"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": "ubxmAuqbyMVmJ??oAGcBG??BeAMSkDAgAA}DFiAMu@Ms@Oq@W??{EdL_@dAiAtDKd@[hB"
+            }
+        }],
+        "2013-11-16 05:59:00": [
+        {
+            "type": "Feature",
+            "properties": {
+                "batchStart": "20131116000000",
+                "terminal": "JFKT5",
+                "duration": "455",
+                "pickupTime": "2013-11-16 05:59:00"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": "uiymAodbyMPsAn@eDvA{ERm@b@iAbEuJnCyG`AaC\_AJ_@x@yChEcO??JL~Bp@vAJ~AF???_@A}A~A@F?"
+            }
+        }],
+    },
+    "batchStart": "20131116000000"
+});
+ /* var sql = buildQuery(req.query)
     , queryText = sql.text.replace('SELECT', 'SELECT DISTINCT');
 
   db.serialize(function () {
     db.all(queryText, sql.values, function (err, result) {
       if (err) { console.log(err); }
+      
       createGeojson(result, function (features) {
         res.json(features);
       });
     });
-  });
+  });*/
 });
 
 app.use('/', router);

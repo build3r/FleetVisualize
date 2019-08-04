@@ -3,21 +3,20 @@ import csv
 import json
 import requests
 
-from .config import GOOGLE_API_KEY, MAPQUEST_API_KEY
+#from .config import GOOGLE_API_KEY, MAPQUEST_API_KEY
 
 GOOGLE_DIRECTIONS = 'https://maps.googleapis.com/maps/api/directions/json'
 MAPQUEST_DIRECTIONS = 'http://open.mapquestapi.com/directions/v2/route'
 
 READ_KEYS = (
-    'vendor_id', 'rate_code', 'pickup_datetime',
-    'trip_time_in_secs', 'passenger_count',
+    'start_datetime',
     'pickup_longitude', 'pickup_latitude',
     'dropoff_longitude', 'dropoff_latitude',
-    'terminal',
+    'trip_time_in_secs'
 )
 
 WRITE_KEYS = (
-    'vendor', 'pickupTime', 'duration',
+    'pickupTime', 'duration',
     'terminal', 'direction',
 )
 
@@ -29,6 +28,7 @@ def get_google_polyline(value):
 
 def get_mapquest_polyline(value):
     value = json.loads(value)
+    print(value['route']['shape']['shapePoints'])
     return value['route']['shape']['shapePoints']
 
 
@@ -41,7 +41,7 @@ def get_pickup_dropoff(data):
 
 def get_google_direction(data):
     pickup, dropoff = get_pickup_dropoff(data)
-    params = dict(origin=pickup, destination=dropoff, key=GOOGLE_API_KEY)
+    params = dict(origin=pickup, destination=dropoff, key='GOOGLE_API_KEY')
     resp = requests.get(url=GOOGLE_DIRECTIONS, params=params)
     if resp.status_code == 200:
         return get_google_polyline(resp.content)
@@ -49,14 +49,17 @@ def get_google_direction(data):
 
 
 def get_mapquest_direction(data):
-    pickup, dropoff = get_pickup_dropoff(data)
+    #pickup, dropoff = get_pickup_dropoff(data)
+    pickup = "12.921529, 77.668855"
+    dropoff = "12.909907, 77.685592"
     params = {
-        'from': pickup, 'to': dropoff, 'key': MAPQUEST_API_KEY,
+        'from': pickup, 'to': dropoff, 'key': 'q7kM2ebG1XIuP5kmcmLyhk1ASTN2GVeu',
         'fullShape': 'true', 'shapeFormat': 'cmp', 'manMaps': 'false',
         'narrativeType': 'none', 'doReverseGeocode': 'false',
     }
     resp = requests.get(url=MAPQUEST_DIRECTIONS, params=params)
     if resp.status_code == 200:
+        #print(resp.content)
         return get_mapquest_polyline(resp.content)
     return 'route-error'
 
@@ -72,10 +75,9 @@ def extract_data(path):
         reader = csv.DictReader(f, fieldnames=READ_KEYS)
         for row in reader:
             data = {
-                'vendor': row['vendor_id'],
-                'pickupTime': row['pickup_datetime'],
+                'pickupTime': row['start_datetime'],
                 'duration': row['trip_time_in_secs'],
-                'terminal': row['terminal'],
+                'terminal': "JFK",
                 'direction': 'error',
             }
             try:
@@ -88,10 +90,12 @@ def extract_data(path):
 def write_with_directions():
     with open('with_directions.csv', 'w+') as f:
         writer = csv.DictWriter(f, WRITE_KEYS)
+        writer.writeheader()
         rows = extract_data('sample.csv')
         for row in rows:
             writer.writerow(row)
 
 
 if __name__ == '__main__':
-    write_with_directions()
+    get_mapquest_direction(None)
+    #write_with_directions()

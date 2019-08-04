@@ -21,7 +21,7 @@ gulp.task('compress-js', function () {
       "public/js/per_date.js",
       "public/js/main.js",
     ])
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(concat('build.js'))
     .pipe(gulp.dest('public/dist/'));
 

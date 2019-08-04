@@ -22,10 +22,15 @@ var map, transform, d3path, $w = $(window);
 function initMap () {
   map = L.map('map', {zoomControl: false});
 
+  // map.fitBounds([
+  //   [40.869693, -74.170267],
+  //   [40.546460, -73.772013]
+  // ]);,,,
   map.fitBounds([
-    [40.869693, -74.170267],
-    [40.546460, -73.772013]
+    [12.902936, 77.647622],
+    [12.929832, 77.709420]
   ]);
+ 
 
   var MAP_ROOT = 'http://{s}.tiles.mapbox.com/v4/zwadia.k5hj7olb'
     , TOKEN = 'pk.eyJ1IjoiendhZGlhIiwiYSI6InlYbnFfUFEifQ.G5od28q6cCQhxrQGKSg1kg';
@@ -141,7 +146,7 @@ function initGraph () {
 // Time and Counts {{{
 var time, timer
   , timerStarted = false
-  , timeFactor = 30
+  , timeFactor = 2
   , timeTicks = 0
   , counts = {}
   , allFeatures = {};
@@ -185,9 +190,9 @@ function processResponse (response) {
     timerStarted = true;
   }
 }
-
+var features;
 function animatePaths (key) {
-  var features = allFeatures[key];
+   features = allFeatures[key];
 
   if (features.length === 0) { getNextChunk(); return; }
 
@@ -207,7 +212,7 @@ function animatePaths (key) {
   });
 
   delete allFeatures[key];
-
+var i=0;
   function pathTransition (d) {
 
     if ( !_.contains(activeTerminals, d.terminal) ) {
@@ -217,7 +222,8 @@ function animatePaths (key) {
 
     var l = this.getTotalLength()
       , endPoint = this.getPointAtLength(l);
-
+     
+  
     var marker = g.append('circle')
       .attr({r: 2, cx: endPoint.x, cy: endPoint.y})
       .datum(pointToLatLon(endPoint));
@@ -232,6 +238,7 @@ function animatePaths (key) {
         this.style.opacity = 1;
       })
       .each('end', function (d) {
+       
         updateCounts(d.terminal);
 
         marker.attr('class', d.terminal)
@@ -248,6 +255,7 @@ function animatePaths (key) {
 
       })
       .attrTween('stroke-dasharray', function () {
+        highlightAirports(0,0);
         return d3.interpolateString('0,' + l, l + ',' + l);
       })
   }
@@ -260,26 +268,26 @@ function animatePaths (key) {
   }
 }
 
-function highlightAirports () {
-  var JFK = map.latLngToLayerPoint(new L.LatLng(40.649, -73.784));
-  var LGA = map.latLngToLayerPoint(new L.LatLng(40.776, -73.876));
+function highlightAirports (x,y) {
+  //var JFK = map.latLngToLayerPoint(new L.LatLng(x, -y));
+  var LGA = map.latLngToLayerPoint(new L.LatLng(12.918560,7.669986));
   appendGroup('airports');
 
   var g = d3.select('#airports');
 
   var g1 = g.append('g')
   g1.append('circle').attr('class', 'JFK')
-    .attr({r: 20, cx: JFK.x, cy: JFK.y});
-  g1.append('text')
-    .attr({dx: JFK.x + 25, dy: JFK.y - 5 })
-    .text('JFK')
+    .attr({r: 20, cx: LGA.x, cy: LGA.y});
+  // g1.append('text')
+  //   .attr({dx: JFK.x + 25, dy: JFK.y - 5 })
+  //   .text('JFK')
 
-  var g2 = g.append('g');
-  g2.append('circle').attr('class', 'LGA')
-    .attr({r: 10, cx: LGA.x, cy: LGA.y})
-  g2.append('text')
-    .attr({dx: LGA.x + 15, dy: LGA.y + 5})
-    .text('La Guardia')
+  // var g2 = g.append('g');
+  // g2.append('circle').attr('class', 'LGA')
+  //   .attr({r: 10, cx: LGA.x, cy: LGA.y})
+  // // g2.append('text')
+  // //   .attr({dx: LGA.x + 15, dy: LGA.y + 5})
+  // //   .text('La Guardia')
 
   g.transition().duration(4000)
     .attr('r', 5).style('opacity', 0)
@@ -322,7 +330,7 @@ function getData (query) {
 }
 
 function createQuery () {
-  TQ.startDate = $('#startDate').val() + ' 00:00:00';
+  TQ.startDate = $('#startDate').val() + ' 05:50:00';
   TQ.endDate = $('#endDate').val() + ' 00:00:00';
   TQ.currentStart = TQ.startDate;
 }
@@ -409,7 +417,7 @@ $(function () {
 
   $('#begin').click(function () {
     $('.overlay').hide();
-    highlightAirports();
+    //highlightAirports();
     updateTimer();
     getNextChunk();
   });

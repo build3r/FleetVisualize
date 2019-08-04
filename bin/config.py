@@ -1,4 +1,4 @@
 
 GOOGLE_API_KEY = 'Your Google API Key'
 
-MAPQUEST_API_KEY = 'OpenMapQuest API Key'
+MAPQUEST_API_KEY = 'q7kM2ebG1XIuP5kmcmLyhk1ASTN2GVeu'
