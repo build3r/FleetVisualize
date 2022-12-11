@@ -4,7 +4,7 @@
   "description": "Mapping of NYC airport terminals and Taxis",
   "main": "index.js",
   "dependencies": {
-    "express": "^4.9.7",
+    "express": "^4.17.3",
     "sql": "^0.40.0",
     "sqlite3": "^3.0.2"
   },
